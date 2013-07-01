@@ -53,6 +53,7 @@ public class Process extends BasicFunction {
         context.pushDocumentContext();
         try {
             if (classifierSource == null || !classifierPath.equals(classifierSource)) {
+                classifierSource = classifierPath;
                 DocumentImpl doc = (DocumentImpl) context.getBroker().getXMLResource(XmldbURI.createInternal(classifierPath));
                 if (doc.getResourceType() != DocumentImpl.BINARY_FILE) {
                     throw new XPathException(this, "Classifier path does not point to a binary resource");
