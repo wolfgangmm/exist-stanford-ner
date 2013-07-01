@@ -22,8 +22,8 @@ public class Process extends BasicFunction {
     public final static FunctionSignature signatures[] = {
             new FunctionSignature(
                 new QName("process", StanfordNERModule.NAMESPACE_URI, StanfordNERModule.PREFIX),
-                "Logs a message to the logger using the template given in the first parameter and " +
-                        "the 'default' channel.",
+                "Process the provided text string. Returns a sequence of text nodes and elements for " +
+                "recognized entities.",
                 new SequenceType[] {
                     new FunctionParameterSequenceType("classifier", Type.ANY_URI, Cardinality.EXACTLY_ONE,
                         "The path to the serialized classifier to load. Should point to a binary resource " +
@@ -31,7 +31,8 @@ public class Process extends BasicFunction {
                         new FunctionParameterSequenceType("text", Type.STRING, Cardinality.EXACTLY_ONE,
                                 "String of text to analyze.")
                 },
-                new FunctionReturnSequenceType(Type.ELEMENT, Cardinality.EXACTLY_ONE, "")
+                new FunctionReturnSequenceType(Type.ELEMENT, Cardinality.EXACTLY_ONE,
+                    "Sequence of text nodes and elements denoting recognized entities in the text")
             )
     };
     private static final QName PERSON_QNAME = new QName("person");
