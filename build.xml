@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="xar" name="rconsole">
+    <property file="build.properties"/>
+    <property name="project.version" value="0.1"/>
+    <property name="project.name" value="stanford-ner"/>
+    <property name="build.dir" value="build"/>
+    <property name="java.src" value="java/src"/>
+    <property name="java.classes" value="${build.dir}/classes"/>
+    <property name="java.libs" value="java/lib"/>
+    <property name="scripts" value="resources/scripts"/>
+
+    <path id="classpath">
+        <fileset dir="${exist.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${exist.dir}/lib/core">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${exist.dir}/lib/optional">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${exist.dir}/tools/jetty/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${java.libs}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="prepare">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${java.classes}"/>
+    </target>
+
+    <target name="compile" depends="prepare">
+        <javac srcdir="${java.src}" destdir="${java.classes}" optimize="true" debug="true" target="1.6" source="1.6">
+            <classpath>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar basedir="${java.classes}" jarfile="${build.dir}/exist-standford-ner-${project.version}.jar">
+            <manifest>
+                <attribute name="Project-Name" value="${project.name}"/>
+                <attribute name="Project-Version" value="${project.version}"/>
+                <attribute name="Project-Build" value="${DSTAMP}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="xar" depends="jar">
+        <zip destfile="${build.dir}/${project.name}-${project.version}.xar">
+            <fileset dir=".">
+                <include name="*.*"/>
+                <include name="modules/**"/>
+                <include name="templates/**"/>
+                <include name="resources/**"/>
+                <exclude name=".git*"/>
+                <exclude name="build.*"/>
+            </fileset>
+            <zipfileset dir="${build.dir}" includes="*.jar" prefix="content"/>
+            <zipfileset dir="${java.libs}" includes="*.jar" prefix="content"/>
+        </zip>
+    </target>
+</project>

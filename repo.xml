@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meta xmlns="http://exist-db.org/xquery/repo">
+    <description>Integrates the Stanford Named Entity Recognition library into eXist-db.</description>
+    <author>Wolfgang Meier</author>
+    <website/>
+    <status>alpha</status>
+    <license>GNU-LGPL</license>
+    <copyright>true</copyright>
+    <type>application</type>
+    <target>stanford-ner</target>
+    <prepare>pre-install.xql</prepare>
+    <finish/>
+</meta>
