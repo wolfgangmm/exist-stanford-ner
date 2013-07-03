@@ -4,6 +4,8 @@ import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.sequences.SeqClassifierFlags;
+import edu.stanford.nlp.util.StringUtils;
 import org.exist.dom.BinaryDocument;
 import org.exist.dom.DocumentImpl;
 import org.exist.dom.QName;
@@ -15,6 +17,7 @@ import org.exist.xquery.value.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 public class Process extends BasicFunction {
@@ -69,32 +72,54 @@ public class Process extends BasicFunction {
             MemTreeBuilder builder = context.getDocumentBuilder();
             ValueSequence result = new ValueSequence();
             StringBuilder buf = new StringBuilder();
+            String background = SeqClassifierFlags.DEFAULT_BACKGROUND_SYMBOL;
+            String prevTag = background;
+            int nodeNr;
             for (List<CoreLabel> sentence : out) {
-                for (CoreLabel word : sentence) {
-                    String wordText = word.word();
-                    String annotation = word.get(CoreAnnotations.AnswerAnnotation.class);
-                    int node;
-                    if (annotation.equals("PERSON")) {
-                        writeText(builder, buf, result);
-                        node = builder.startElement(PERSON_QNAME, null);
-                        builder.characters(wordText);
-                        builder.endElement();
-                        result.add(builder.getDocument().getNode(node));
-                    } else if (annotation.equals("LOCATION")) {
-                        writeText(builder, buf, result);
-                        node = builder.startElement(LOCATION_QNAME, null);
-                        builder.characters(wordText);
-                        builder.endElement();
-                        result.add(builder.getDocument().getNode(node));
-                    } else if (annotation.equals("ORGANIZATION")) {
-                        writeText(builder, buf, result);
-                        node = builder.startElement(ORGANIZATION_QNAME, null);
-                        builder.characters(wordText);
-                        builder.endElement();
-                        result.add(builder.getDocument().getNode(node));
+                for (Iterator<CoreLabel> wordIter = sentence.iterator(); wordIter.hasNext(); ) {
+                    CoreLabel word = wordIter.next();
+                    final String current = word.get(CoreAnnotations.OriginalTextAnnotation.class);
+                    final String tag = word.get(CoreAnnotations.AnswerAnnotation.class);
+                    final String before = word.get(CoreAnnotations.BeforeAnnotation.class);
+                    final String after = word.get(CoreAnnotations.AfterAnnotation.class);
+                    if (!tag.equals(prevTag)) {
+                        if (!prevTag.equals(background) && !tag.equals(background)) {
+                            writeText(builder, buf, result);
+                            builder.endElement();
+                            if (before != null)
+                                buf.append(before);
+                            writeText(builder, buf, result);
+                            final String name = tag.toLowerCase();
+                            nodeNr = builder.startElement("", name, name, null);
+                            result.add(builder.getDocument().getNode(nodeNr));
+                        } else if (!prevTag.equals(background)) {
+                            writeText(builder, buf, result);
+                            builder.endElement();
+                            if (before != null)
+                                buf.append(before);
+                        } else if (!tag.equals(background)) {
+                            if (before != null)
+                                buf.append(before);
+                            writeText(builder, buf, result);
+                            final String name = tag.toLowerCase();
+                            nodeNr = builder.startElement("", name, name, null);
+                            result.add(builder.getDocument().getNode(nodeNr));
+                        }
                     } else {
-                        buf.append(wordText).append(' ');
+                        if (before != null)
+                            buf.append(before);
                     }
+                    buf.append(current);
+
+                    if (!tag.equals(background) && !wordIter.hasNext()) {
+                        writeText(builder, buf, result);
+                        builder.endElement();
+                        prevTag = background;
+                    } else {
+                        prevTag = tag;
+                    }
+                    if (after != null)
+                        buf.append(after);
                 }
             }
             writeText(builder, buf, result);
