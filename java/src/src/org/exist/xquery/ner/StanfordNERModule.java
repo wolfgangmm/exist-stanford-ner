@@ -17,7 +17,8 @@ public class StanfordNERModule extends AbstractInternalModule {
     public final static String PREFIX = "ner";
 
     public final static FunctionDef[] functions = {
-        new FunctionDef(Process.signatures[0], Process.class)
+        new FunctionDef(Classify.signatures[0], Classify.class),
+        new FunctionDef(Classify.signatures[1], Classify.class),
     };
 
     public StanfordNERModule(Map<String, List<? extends Object>> parameters) {
