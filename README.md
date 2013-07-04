@@ -20,17 +20,19 @@ ner:classify-node($classifier as xs:anyURI, $node as node()) as node() - returns
 
 ## Usage example
 
+```xquery
 xquery version "3.0";
 
-  import module namespace ner="http://exist-db.org/xquery/stanford-ner";
+import module namespace ner="http://exist-db.org/xquery/stanford-ner";
 
-  let $classifier := xs:anyURI("/db/apps/stanford-ner/resources/classifiers/english.all.3class.distsim.crf.ser.gz")
-  let $text := <p>The fate of Lehman Brothers, the beleaguered investment bank,
+let $classifier := xs:anyURI("/db/apps/stanford-ner/resources/classifiers/english.all.3class.distsim.crf.ser.gz")
+let $text := <p>The fate of Lehman Brothers, the beleaguered investment bank,
    hung in the balance on Sunday as Federal Reserve officials and the leaders
    of major financial institutions continued to gather in emergency meetings
    trying to complete a plan to rescue the stricken bank.  Several possible
    plans emerged from the talks, held at the Federal Reserve Bank of New York
    and led by Timothy R. Geithner, the president of the New York Fed, and
    Treasury Secretary Henry M. Paulson Jr.</p>
-  return
-   ner:classify-node($classifier, $text)
+return
+ ner:classify-node($classifier, $text)
+```
