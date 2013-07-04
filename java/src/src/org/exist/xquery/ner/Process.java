@@ -5,7 +5,6 @@ import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.sequences.SeqClassifierFlags;
-import edu.stanford.nlp.util.StringUtils;
 import org.exist.dom.BinaryDocument;
 import org.exist.dom.DocumentImpl;
 import org.exist.dom.QName;
@@ -38,9 +37,6 @@ public class Process extends BasicFunction {
                     "Sequence of text nodes and elements denoting recognized entities in the text")
             )
     };
-    private static final QName PERSON_QNAME = new QName("person");
-    private static final QName LOCATION_QNAME = new QName("location");
-    private static final QName ORGANIZATION_QNAME = new QName("organization");
 
     private static String classifierSource = null;
     private static AbstractSequenceClassifier<CoreLabel> cachedClassifier = null;
@@ -74,7 +70,7 @@ public class Process extends BasicFunction {
             StringBuilder buf = new StringBuilder();
             String background = SeqClassifierFlags.DEFAULT_BACKGROUND_SYMBOL;
             String prevTag = background;
-            int nodeNr;
+            int nodeNr = 0;
             for (List<CoreLabel> sentence : out) {
                 for (Iterator<CoreLabel> wordIter = sentence.iterator(); wordIter.hasNext(); ) {
                     CoreLabel word = wordIter.next();
@@ -84,17 +80,18 @@ public class Process extends BasicFunction {
                     final String after = word.get(CoreAnnotations.AfterAnnotation.class);
                     if (!tag.equals(prevTag)) {
                         if (!prevTag.equals(background) && !tag.equals(background)) {
-                            writeText(builder, buf, result);
+                            writeText(builder, buf, null);
                             builder.endElement();
+                            result.add(builder.getDocument().getNode(nodeNr));
                             if (before != null)
                                 buf.append(before);
                             writeText(builder, buf, result);
                             final String name = tag.toLowerCase();
                             nodeNr = builder.startElement("", name, name, null);
-                            result.add(builder.getDocument().getNode(nodeNr));
                         } else if (!prevTag.equals(background)) {
-                            writeText(builder, buf, result);
+                            writeText(builder, buf, null);
                             builder.endElement();
+                            result.add(builder.getDocument().getNode(nodeNr));
                             if (before != null)
                                 buf.append(before);
                         } else if (!tag.equals(background)) {
@@ -103,7 +100,6 @@ public class Process extends BasicFunction {
                             writeText(builder, buf, result);
                             final String name = tag.toLowerCase();
                             nodeNr = builder.startElement("", name, name, null);
-                            result.add(builder.getDocument().getNode(nodeNr));
                         }
                     } else {
                         if (before != null)
@@ -138,7 +134,9 @@ public class Process extends BasicFunction {
     private void writeText(MemTreeBuilder builder, StringBuilder buf, ValueSequence result) {
         if (buf.length() > 0) {
             int node = builder.characters(buf.toString());
-            result.add(builder.getDocument().getNode(node));
+            if (result != null) {
+                result.add(builder.getDocument().getNode(node));
+            }
             buf.setLength(0);
         }
     }
