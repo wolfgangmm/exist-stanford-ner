@@ -5,10 +5,10 @@ Integrate the Stanford Named Entity Recognizer into eXist-db.
 
 ## Compile and install
 
-1) clone the github repository: https://github.com/wolfgangmm/exist-stanford-ner
-2) edit build.properties and set exist.dir to point to your eXist install directory
-3) call "ant" in the directory to create a .xar
-4) upload the xar into eXist using the dashboard
+1. clone the github repository: https://github.com/wolfgangmm/exist-stanford-ner
+2. edit build.properties and set exist.dir to point to your eXist install directory
+3. call "ant" in the directory to create a .xar
+4. upload the xar into eXist using the dashboard
 
 ## Functions
 
