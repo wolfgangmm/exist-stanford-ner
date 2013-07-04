@@ -63,5 +63,11 @@
             <zipfileset dir="${build.dir}" includes="*.jar" prefix="content"/>
             <zipfileset dir="${java.libs}" includes="*.jar" prefix="content"/>
         </zip>
+        <delete dir="${build.dir}/classes"/>
+        <delete>
+            <fileset dir="${build.dir}">
+                <include name="*.jar"/>
+            </fileset>
+        </delete>
     </target>
 </project>
