@@ -18,6 +18,8 @@ ner:classify-string($classifier as xs:anyURI, $text as xs:string) - processes a 
 
 ner:classify-node($classifier as xs:anyURI, $node as node()) as node() - returns an in-memory copy of $node with all named entities wrapped into inline elements.
 
+For Chinese text use the variants: ner:classify-string-cn and ner:classify-node-cn.
+
 ## Usage example
 
 ```xquery
