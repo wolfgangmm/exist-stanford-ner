@@ -36,3 +36,18 @@ let $text := <p>The fate of Lehman Brothers, the beleaguered investment bank,
 return
  ner:classify-node($classifier, $text)
 ```
+
+## Support for Chinese
+
+To recognize entities in Chinese texts, you need to obtain the Chinese classifier and segmenter. Before you build the .xar to install, download the classifier and word segmenter using the following links:
+
+* http://nlp.stanford.edu/software/stanford-ner-2012-11-11-chinese.zip
+* http://nlp.stanford.edu/software/stanford-segmenter-2013-06-20.zip
+
+From the first package, copy chinese.misc.distsim.crf.ser.gz into resources/classifiers. From the second zip, copy
+
+* data/dict-chris6.ser.gz
+* data/norm.simp.utf8
+* data/ctb.gz
+
+and everything inside data/dict into the resources/classifiers directory.
