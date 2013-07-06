@@ -40,6 +40,20 @@ public class Classify extends BasicFunction {
                     "Sequence of text nodes and elements denoting recognized entities in the text")
             ),
             new FunctionSignature(
+                new QName("classify-string-cn", StanfordNERModule.NAMESPACE_URI, StanfordNERModule.PREFIX),
+                "Classify the provided text string. Returns a sequence of text nodes and elements for " +
+                        "recognized entities.",
+                new SequenceType[] {
+                        new FunctionParameterSequenceType("classifier", Type.ANY_URI, Cardinality.EXACTLY_ONE,
+                                "The path to the serialized classifier to load. Should point to a binary resource " +
+                                        "stored within the database"),
+                        new FunctionParameterSequenceType("text", Type.STRING, Cardinality.EXACTLY_ONE,
+                                "String of text to analyze.")
+                },
+                new FunctionReturnSequenceType(Type.ELEMENT, Cardinality.EXACTLY_ONE,
+                        "Sequence of text nodes and elements denoting recognized entities in the text")
+            ),
+            new FunctionSignature(
                 new QName("classify-node", StanfordNERModule.NAMESPACE_URI, StanfordNERModule.PREFIX),
                 "Mark up named entities in a node and all its sub-nodes. Returns a new in-memory document. " +
                 "Recognized entities are enclosed in inline elements.",
@@ -52,10 +66,25 @@ public class Classify extends BasicFunction {
                 },
                 new FunctionReturnSequenceType(Type.NODE, Cardinality.EXACTLY_ONE,
                         "An in-memory node")
+            ),
+            new FunctionSignature(
+                new QName("classify-node-cn", StanfordNERModule.NAMESPACE_URI, StanfordNERModule.PREFIX),
+                "Mark up named entities in a node and all its sub-nodes. Returns a new in-memory document. " +
+                "Recognized entities are enclosed in inline elements.",
+                new SequenceType[] {
+                    new FunctionParameterSequenceType("classifier", Type.ANY_URI, Cardinality.EXACTLY_ONE,
+                            "The path to the serialized classifier to load. Should point to a binary resource " +
+                                    "stored within the database"),
+                    new FunctionParameterSequenceType("node", Type.NODE, Cardinality.EXACTLY_ONE,
+                            "The node to process.")
+                },
+                new FunctionReturnSequenceType(Type.NODE, Cardinality.EXACTLY_ONE,
+                        "An in-memory node")
             )
     };
 
     private static String classifierSource = null;
+    private static File dataDir = null;
     private static AbstractSequenceClassifier<CoreLabel> cachedClassifier = null;
 
     public Classify(XQueryContext context, FunctionSignature signature) {
@@ -76,16 +105,23 @@ public class Classify extends BasicFunction {
                 }
                 BinaryDocument binaryDocument = (BinaryDocument)doc;
                 File classifierFile = context.getBroker().getBinaryFile(binaryDocument);
-
+                dataDir = classifierFile.getParentFile();
                 cachedClassifier = CRFClassifier.getClassifier(classifierFile);
             }
 
+            ChineseSegmenter segmenter = null;
+            if (isCalledAs("classify-node-cn")) {
+                segmenter = ChineseSegmenter.getInstance(dataDir);
+            }
             if (isCalledAs("classify-string")) {
                 String text = args[1].getStringValue();
+                if (segmenter != null) {
+                    text = segmenter.segment(text);
+                }
                 return classifyString(text);
             } else {
                 NodeValue nv = (NodeValue) args[1].itemAt(0);
-                return classifyNode(nv);
+                return classifyNode(nv, segmenter);
             }
         } catch (PermissionDeniedException e) {
             throw new XPathException(this, "Permission denied to read classifier resource", e);
@@ -98,12 +134,12 @@ public class Classify extends BasicFunction {
         }
     }
 
-    private Sequence classifyNode(NodeValue node) throws XPathException {
+    private Sequence classifyNode(NodeValue node, ChineseSegmenter segmenter) throws XPathException {
         final Properties serializeOptions = new Properties();
 
         try {
             final MemTreeBuilder builder = context.getDocumentBuilder();
-            final DocumentBuilderReceiver receiver = new NERDocumentReceiver(builder);
+            final DocumentBuilderReceiver receiver = new NERDocumentReceiver(builder, segmenter);
 
             final int nodeNr = builder.getDocument().getLastNode();
 
@@ -195,20 +231,30 @@ public class Classify extends BasicFunction {
     private class NERDocumentReceiver extends DocumentBuilderReceiver {
 
         private MemTreeBuilder builder;
+        private ChineseSegmenter segmenter;
 
-        public NERDocumentReceiver(MemTreeBuilder builder) {
+        public NERDocumentReceiver(MemTreeBuilder builder, ChineseSegmenter segmenter) {
             super(builder, true);
             this.builder = builder;
+            this.segmenter = segmenter;
         }
 
         @Override
         public void characters(CharSequence seq) throws SAXException {
-            classifyText(seq.toString(), builder, null);
+            String s = seq.toString();
+            if (segmenter != null) {
+                s = segmenter.segment(s);
+            }
+            classifyText(s, builder, null);
         }
 
         @Override
         public void characters(char[] ch, int start, int len) throws SAXException {
-            classifyText(new String(ch, start, len), builder, null);
+            String s = new String(ch, start, len);
+            if (segmenter != null) {
+                s = segmenter.segment(s);
+            }
+            classifyText(s, builder, null);
         }
     }
 }
