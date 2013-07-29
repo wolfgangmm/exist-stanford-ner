@@ -1,1 +1,41 @@
 /* Application styles could go here */
+@import url('$shared/resources/css/exist.css');
+
+.source .toolbar, .example-output {
+    padding-left: 18px;
+    border-left: 4px solid #C7C7C7;
+}
+
+.output {
+    margin: 8px 0;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.output .code {
+    max-height: 200px;
+    overflow: auto;
+    background: #ffffff;
+    padding: 0 8px;
+}
+
+.load-indicator {
+    display: none;
+}
+
+.person {
+    background-color: #CFFB6E;
+}
+
+.organization {
+    background-color: #FFDD6F;
+}
+
+.location {
+    color: #FFF;
+    background-color: #817AED;
+}
+
+.date {
+    background-color: #4A6807;
+}

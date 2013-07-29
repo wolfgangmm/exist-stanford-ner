@@ -58,24 +58,6 @@ public class Classify extends BasicFunction {
                     "Sequence of text nodes and elements denoting recognized entities in the text")
             ),
             new FunctionSignature(
-                    new QName("classify-string", StanfordNERModule.NAMESPACE_URI, StanfordNERModule.PREFIX),
-                    "Classify the provided text string. Returns a sequence of text nodes and elements for " +
-                            "recognized entities.",
-                    new SequenceType[] {
-                            new FunctionParameterSequenceType("classifier", Type.ANY_URI, Cardinality.EXACTLY_ONE,
-                                    "The path to the serialized classifier to load. Should point to a binary resource " +
-                                            "stored within the database"),
-                            new FunctionParameterSequenceType("text", Type.STRING, Cardinality.EXACTLY_ONE,
-                                    "String of text to analyze."),
-                            new FunctionParameterSequenceType("callback", Type.FUNCTION_REFERENCE, Cardinality.EXACTLY_ONE,
-                                "A function item to be called for every entity found. Should take two parameters: " +
-                                        "1) the name of the entity as string, 2) the content as string. The return value " +
-                                        "of the function is inserted into the output.")
-                    },
-                    new FunctionReturnSequenceType(Type.ELEMENT, Cardinality.EXACTLY_ONE,
-                            "Sequence of text nodes and elements denoting recognized entities in the text")
-            ),
-            new FunctionSignature(
                 new QName("classify-string-cn", StanfordNERModule.NAMESPACE_URI, StanfordNERModule.PREFIX),
                 "Classify the provided text string. Returns a sequence of text nodes and elements for " +
                         "recognized entities.",
@@ -88,24 +70,6 @@ public class Classify extends BasicFunction {
                 },
                 new FunctionReturnSequenceType(Type.ELEMENT, Cardinality.EXACTLY_ONE,
                         "Sequence of text nodes and elements denoting recognized entities in the text")
-            ),
-            new FunctionSignature(
-                    new QName("classify-string-cn", StanfordNERModule.NAMESPACE_URI, StanfordNERModule.PREFIX),
-                    "Classify the provided text string. Returns a sequence of text nodes and elements for " +
-                            "recognized entities.",
-                    new SequenceType[] {
-                            new FunctionParameterSequenceType("classifier", Type.ANY_URI, Cardinality.EXACTLY_ONE,
-                                    "The path to the serialized classifier to load. Should point to a binary resource " +
-                                            "stored within the database"),
-                            new FunctionParameterSequenceType("text", Type.STRING, Cardinality.EXACTLY_ONE,
-                                    "String of text to analyze."),
-                            new FunctionParameterSequenceType("callback", Type.FUNCTION_REFERENCE, Cardinality.EXACTLY_ONE,
-                                    "A function item to be called for every entity found. Should take two parameters: " +
-                                    "1) the name of the entity as string, 2) the content as string. The return value " +
-                                    "of the function is inserted into the output.")
-                    },
-                    new FunctionReturnSequenceType(Type.ELEMENT, Cardinality.EXACTLY_ONE,
-                            "Sequence of text nodes and elements denoting recognized entities in the text")
             ),
             new FunctionSignature(
                 new QName("classify-node", StanfordNERModule.NAMESPACE_URI, StanfordNERModule.PREFIX),

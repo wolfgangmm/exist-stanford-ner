@@ -10,4 +10,5 @@
     <target>stanford-ner</target>
     <prepare>pre-install.xql</prepare>
     <finish/>
+    <deployed>2013-07-28T10:53:43.384+02:00</deployed>
 </meta>
