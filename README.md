@@ -3,6 +3,8 @@ exist-stanford-ner
 
 Integrate the Stanford Named Entity Recognizer into eXist-db.
 
+Demo and documentation are included in the package.
+
 ## Compile and install
 
 1. clone the github repository: https://github.com/wolfgangmm/exist-stanford-ner
@@ -12,13 +14,17 @@ Integrate the Stanford Named Entity Recognizer into eXist-db.
 
 ## Functions
 
-There are only two functions:
+There are only three functions:
 
 ner:classify-string($classifier as xs:anyURI, $text as xs:string) - processes a single string of text and returns a sequence of text nodes and elements (person, location, organization)
 
 ner:classify-node($classifier as xs:anyURI, $node as node()) as node() - returns an in-memory copy of $node with all named entities wrapped into inline elements.
 
+ner:classify-node($classifier as xs:anyURI, $node as node(), $callback as function(xs:string, xs:string) as item()*) as node() - returns an in-memory copy of $node. Calls the callback function for every entity found and replaces it with the return value of the function.
+
 For Chinese text use the variants: ner:classify-string-cn and ner:classify-node-cn.
+
+Extended documentation can be found after installing the package.
 
 ## Usage example
 
