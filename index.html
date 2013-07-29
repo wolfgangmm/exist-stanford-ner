@@ -2,7 +2,9 @@
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
     <h1>Stanford NER XQuery Module</h1>
     <p>An XQuery module to integrate the <a href="http://nlp.stanford.edu/software/CRF-NER.shtml">Stanford Named Entity Recognizer</a>
-    into eXist-db.</p>
+    into eXist-db. The package can be installed via the package manager in the eXist dashboard or you can <a href="building.html">build</a>
+        it yourself.
+    </p>
     <h2>Examples</h2>
     <p>The module basically provides two functions:</p>
     <ol>
@@ -15,8 +17,8 @@
             The structure of the original XML is preserved.
         </li>
     </ol>
-    <p>For all functions you have to define the classifier to use in the first argument. The classifier is a binary resource and can be stored in the 
-    database. It is referenced via an xs:anyURI. There are various classifiers, which will produce different output, depending on which data set they
+    <p>For all functions you have to define the serialized classifier model to use in the first argument. The classifier model is a binary resource and can be stored in the 
+    database. It is referenced via an xs:anyURI. There are various models, which will produce different output, depending on which data set they
     have been trained. Stanford NER also allows you to train your own classifiers.
     </p>
     <h3>String Processing</h3>
@@ -68,4 +70,10 @@ return
         &lt;span class="{lower-case($tag)}"&gt;{$content}&lt;/span&gt;
     })
 </pre>
+    <h2>Support for other Languages</h2>
+    <p>From the <a href="http://nlp.stanford.edu/software/CRF-NER.shtml">Stanford NLP website</a>, you can download two additional classifier models: one for 
+    German and one for Chinese. While the German model should work out of the box if you load the corresponding resource into the db, Chinese text has to be 
+    segmented first. We provide variants of the two XQuery functions which deal with the segmentation step: <code>ner:classify-string-cn</code> and
+    <code>ner:classify-node-cn</code>.</p>
+    <p>Please read the Chinese Language Support section in the <a href="building.html">build documentation</a>.</p>
 </div>

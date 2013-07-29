@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <h1>Building the Package</h1>
+    <ol>
+        <li>clone the github repository: <a href="https://github.com/wolfgangmm/exist-stanford-ner">https://github.com/wolfgangmm/exist-stanford-ner</a>
+        </li>
+        <li>edit <code>build.properties</code> and set <code>exist.dir</code> to point to your eXist install directory</li>
+        <li>call "ant" in the directory to create a .xar</li>
+        <li>upload the xar into eXist using the dashboard</li>
+    </ol>
+    <h1>Chinese Language Support</h1>
+    <p>To recognize entities in Chinese texts, you need to obtain the Chinese classifier and
+        segmenter. Before you build the .xar to install, download the classifier and word segmenter
+        using the following links:</p>
+    <ul>
+        <li>
+            <a href="http://nlp.stanford.edu/software/stanford-ner-2012-11-11-chinese.zip">http://nlp.stanford.edu/software/stanford-ner-2012-11-11-chinese.zip</a>
+        </li>
+        <li>
+            <a href="http://nlp.stanford.edu/software/stanford-segmenter-2013-06-20.zip">http://nlp.stanford.edu/software/stanford-segmenter-2013-06-20.zip</a>
+        </li>
+    </ul>
+    <p>From the first package, copy <code>chinese.misc.distsim.crf.ser.gz</code> into
+            <code>resources/classifiers</code>. From the second zip, copy</p>
+    <ul>
+        <li>data/dict-chris6.ser.gz</li>
+        <li>data/norm.simp.utf8</li>
+        <li>data/ctb.gz</li>
+    </ul>
+    <p>and everything inside <code>data/dict</code> into the <code>resources/classifiers</code>
+        directory.</p>
+</div>
