@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://exist-db.org/ns/expath-pkg">
-    <jar>exist-standford-ner-0.1.jar</jar>
-    <jar>stanford-ner-2013-06-20.jar</jar>
+    <jar>exist-standford-ner-0.2.jar</jar>
+    <jar>stanford-ner-2015-04-20.jar</jar>
     <java>
         <namespace>http://exist-db.org/xquery/stanford-ner</namespace>
         <class>org.exist.xquery.ner.StanfordNERModule</class>
