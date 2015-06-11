@@ -30,8 +30,6 @@ import java.util.Properties;
  */
 public class ChineseSegmenter {
 
-    private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(ChineseSegmenter.class);
-
     private static ChineseSegmenter instance = null;
 
     public static ChineseSegmenter getInstance(File dataDir) throws XPathException {
@@ -60,7 +58,7 @@ public class ChineseSegmenter {
         } catch (ClassNotFoundException e) {
             throw new XPathException(e.getMessage());
         } catch (Exception e) {
-            LOG.warn(e.getMessage(), e);
+            throw new XPathException(e.getMessage());
         }
     }
 
