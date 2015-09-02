@@ -1,7 +1,7 @@
 /*
  *   exist-stanford-ner: XQuery module to integrate the stanford named entity
  *   extraction library with eXist-db.
- *   Copyright (C) 2013 Wolfgang Meier and contributors
+ *   Copyright (C) 2013-2015 Wolfgang Meier and contributors
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import org.exist.xquery.XPathException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -32,7 +33,7 @@ public class ChineseSegmenter {
 
     private static ChineseSegmenter instance = null;
 
-    public static ChineseSegmenter getInstance(File dataDir) throws XPathException {
+    public static ChineseSegmenter getInstance(Path dataDir) throws XPathException {
         if (instance == null) {
             instance = new ChineseSegmenter(dataDir);
         }
@@ -41,18 +42,18 @@ public class ChineseSegmenter {
 
     private CRFClassifier classifier;
 
-    public ChineseSegmenter(File dataDir) throws XPathException {
+    public ChineseSegmenter(Path dataDir) throws XPathException {
         // "ctb.gz"
         Properties props = new Properties();
-        props.setProperty("NormalizationTable", new File(dataDir, "norm.simp.utf8").getAbsolutePath());
+        props.setProperty("NormalizationTable", new File(dataDir.toFile(), "norm.simp.utf8").getAbsolutePath());
         props.setProperty("normTableEncoding", "UTF-8");
-        props.setProperty("sighanCorporaDict", dataDir.getAbsolutePath());
+        props.setProperty("sighanCorporaDict", dataDir.toAbsolutePath().toString());
         props.setProperty("sighanPostProcessing", "true");
-        props.setProperty("serDictionary", new File(dataDir, "dict-chris6.ser.gz").getAbsolutePath());
+        props.setProperty("serDictionary", new File(dataDir.toFile(), "dict-chris6.ser.gz").getAbsolutePath());
 
         classifier = new CRFClassifier(props);
         try {
-            classifier.loadClassifier(new File(dataDir, "ctb.gz"), props);
+            classifier.loadClassifier(new File(dataDir.toFile(), "ctb.gz"), props);
         } catch (IOException e) {
             throw new XPathException(e.getMessage());
         } catch (ClassNotFoundException e) {

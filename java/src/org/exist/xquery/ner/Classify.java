@@ -1,7 +1,7 @@
 /*
  *   exist-stanford-ner: XQuery module to integrate the stanford named entity
  *   extraction library with eXist-db.
- *   Copyright (C) 2013 Wolfgang Meier and contributors
+ *   Copyright (C) 2013-2015 Wolfgang Meier and contributors
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -34,8 +34,8 @@ import org.exist.xquery.*;
 import org.exist.xquery.value.*;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -139,7 +139,7 @@ public class Classify extends BasicFunction {
     };
 
     private static String classifierSource = null;
-    private static File dataDir = null;
+    private static Path dataDir = null;
     private static AbstractSequenceClassifier<CoreLabel> cachedClassifier = null;
     private AnalyzeContextInfo cachedContextInfo;
 
@@ -166,9 +166,9 @@ public class Classify extends BasicFunction {
                     throw new XPathException(this, "Classifier path does not point to a binary resource");
                 }
                 BinaryDocument binaryDocument = (BinaryDocument)doc;
-                File classifierFile = context.getBroker().getBinaryFile(binaryDocument);
-                dataDir = classifierFile.getParentFile();
-                cachedClassifier = CRFClassifier.getClassifier(classifierFile);
+                Path classifierFile = context.getBroker().getBinaryFile(binaryDocument);
+                dataDir = classifierFile.getParent();
+                cachedClassifier = CRFClassifier.getClassifier(classifierFile.toFile());
             }
 
             ChineseSegmenter segmenter = null;
