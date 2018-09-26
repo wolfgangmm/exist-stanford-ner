@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://expath.org/ns/pkg" name="http://exist-db.org/apps/stanford-ner" abbrev="stanford-ner" version="0.4" spec="1.0">
+<package xmlns="http://expath.org/ns/pkg" name="http://exist-db.org/apps/stanford-ner" abbrev="stanford-ner" version="0.5.0" spec="1.0">
     <title>Stanford Named Entity Recognition for eXist</title>
     <dependency package="http://exist-db.org/apps/shared"/>
-    <dependency processor="http://exist-db.org" semver-min="2.3.0"/>
+    <dependency processor="http://exist-db.org" semver-min="3.0.4"/>
 </package>
