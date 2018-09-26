@@ -11,4 +11,11 @@
     <prepare>pre-install.xql</prepare>
     <finish/>
     <deployed>2013-07-28T10:53:43.384+02:00</deployed>
+    <changelog>
+        <change xmlns="" version="0.3.0">
+            <ul>
+                <li>Update the stanford named entity recognition library to the 2015-04-20 version</li>
+            </ul>
+        </change>
+    </changelog>
 </meta>
